@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frese AI Chatbot Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #chat {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            width: 50%;
+            overflow-y: scroll;
+            margin-top: 20px;
+        }
+        .message {
+            margin: 10px 0;
+        }
+        .user {
+            text-align: right;
+        }
+        .bot {
+            text-align: left;
+        }
+        #user-input {
+            width: 50%;
+            height: 100px;
+            padding: 10px;
+            font-size: 16px;
+            resize: vertical;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        #send-button {
+            width: 100px;
+            height: 40px;
+            font-size: 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        #spinner {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Frese AI Chatbot Assistant</h1>
+    <textarea id="user-input" placeholder="Type your message here..." required></textarea>
+    <button id="send-button" onclick="sendMessage()">Send</button>
+    <img id="spinner" src="spinner.gif" alt="Spinning...">
+    <div id="chat"></div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            document.getElementById('user-input').value = '';
+
+            const chatDiv = document.getElementById('chat');
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.className = 'message user';
+            userMessageDiv.textContent = userInput;
+            chatDiv.appendChild(userMessageDiv);
+
+            const spinner = document.getElementById('spinner');
+            console.log('Showing spinner'); // Debug log
+            spinner.style.display = 'block';
+
+            try {
+                const response = await fetch('/run-flow', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        flowIdOrName: 'Frese1-1',
+                        inputValue: userInput,
+                        tweaks: {},
+                        stream: false
+                    })
+                });
+
+                const data = await response.json();
+                const botMessageDiv = document.createElement('div');
+                botMessageDiv.className = 'message bot';
+
+                // Process the response text to include line breaks after each emoji or paragraph
+                const processedText = data.output
+                    .replace(/([\u{1F600}-\u{1F64F}])/gu, '$1<br>') // Emojis
+                    .replace(/\n/g, '<br>'); // Paragraphs
+
+                botMessageDiv.innerHTML = processedText;
+                chatDiv.appendChild(botMessageDiv);
+
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+            } catch (error) {
+                const errorMessageDiv = document.createElement('div');
+                errorMessageDiv.className = 'message bot';
+                errorMessageDiv.textContent = 'Error: ' + error.message;
+                chatDiv.appendChild(errorMessageDiv);
+            } finally {
+                console.log('Hiding spinner'); // Debug log
+                spinner.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
