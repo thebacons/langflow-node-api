@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import cors from 'cors'; // Import the cors package
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ console.log('LANGFLOW_API_KEY:', process.env.LANGFLOW_API_KEY); // Debug log
 
 const app = express();
 app.use(express.json());
+app.use(cors()); // Use the cors middleware
 
 // Middleware to log all incoming requests
 app.use((req, res, next) => {
