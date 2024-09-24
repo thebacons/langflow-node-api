@@ -102,8 +102,8 @@ class LangflowClient {
     }
 }
 
-const langflowClient = new LangflowClient('https://odin-langflow-u23171.vm.elestio.app', langflowApiKey);
-
+//const langflowClient = new LangflowClient('https://odin-langflow-u23171.vm.elestio.app', langflowApiKey);
+const langflowClient = new LangflowClient('https://langflow-1-u23171.vm.elestio.app', langflowApiKey);
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
