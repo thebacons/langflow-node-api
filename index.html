@@ -83,12 +83,12 @@
                // Determine the correct URL based on the hostname
             const hostname = window.location.hostname;
             let url;
-            if (hostname === 'localhost' || hostname === '127.0.0.1') {
+           // if (hostname === 'localhost' || hostname === '127.0.0.1') {
                 url = 'http://localhost:3000/run-flow';
-            } else {
-                //url = 'https://cicd-6ghng-u23171.vm.elestio.app:18345/proxy/3000/run-flow';
-                url = 'https://langflow-node-api-u23171.vm.elestio.app/run-flow';
-            }
+           // } else {
+            //    url = 'https://cicd-6ghng-u23171.vm.elestio.app:18345/proxy/3000/run-flow';
+            //    url = 'https://langflow-node-api-u23171.vm.elestio.app/run-flow';
+           // }
 
             try {
                 const response = await fetch(url,  {
